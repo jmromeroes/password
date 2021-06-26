@@ -1,0 +1,4 @@
+packages:
+         ./password-instances-aeson/password-instances-aeson.cabal
+         ./password-instances-http-api-data/password-instances-http-api-data.cabal
+         ./password-instances-persistent/password-instances-persistent.cabal
