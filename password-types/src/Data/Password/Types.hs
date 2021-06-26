@@ -1,4 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
+
 {-|
 Module      : Data.Password.Types
 Copyright   : (c) Dennis Gosnell, 2019; Felix Paulusma, 2020
@@ -48,6 +51,7 @@ module Data.Password.Types (
   , unsafeShowPassword
     -- * Hashing salts
   , Salt (..)
+  , ErrMsg
   ) where
 
 import Data.ByteArray (constEq)
@@ -56,6 +60,7 @@ import Data.Function (on)
 import Data.String (IsString(..))
 import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8)
+import GHC.TypeLits (ErrorMessage(..))
 
 -- $setup
 -- >>> :set -XOverloadedStrings
@@ -118,3 +123,8 @@ instance Eq (PasswordHash a)  where
 newtype Salt a = Salt
   { getSalt :: ByteString
   } deriving (Eq, Show)
+
+type ErrMsg e = 'Text "Warning! Tried to convert plain-text Password to " ':<>: 'Text e ':<>: 'Text "!"
+          ':$$: 'Text "  This is likely a security leak. Please make sure whether this was intended."
+          ':$$: 'Text "  If this is intended, please use 'unsafeShowPassword' before converting to " ':<>: 'Text e
+          ':$$: 'Text ""
